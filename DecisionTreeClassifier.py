@@ -80,11 +80,8 @@ class MyDecisionTreeClassifier(BaseEstimator):
 		if len(np.unique(y)) == 1:
 			return Node(labels=y)
 
-        # If the stop criterion is not satisfied, search for the optimal partition
 		if depth < self.max_depth and n_samples >= self.min_samples_split:
-            # Iterate for all features...
 			for feature_idx in range(n_features):
-                # and all thresholds for fixed feature
 				threshold_values = np.unique(X[:, feature_idx])    
 				functional_values = [self._functional(X, y, feature_idx, threshold) for threshold in threshold_values]
                 
@@ -97,12 +94,10 @@ class MyDecisionTreeClassifier(BaseEstimator):
 					best_mask = X[:, feature_idx] < best_threshold
     
 		if best_feature_idx is not None:
-            # In case of partition go next recursivelly...
 			return Node(feature_idx=best_feature_idx, threshold=best_threshold, 
                         left=self._build_tree(X[best_mask, :], y[best_mask], depth + 1),
                         right=self._build_tree(X[~best_mask, :], y[~best_mask], depth + 1))
 		else:
-            # else the vertex is a leaf, leave recursion
 			return Node(labels=y)
 	
 	def fit(self, X, y):
